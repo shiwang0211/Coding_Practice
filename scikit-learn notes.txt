@@ -1,0 +1,87 @@
+Set up model with params:
+--------
+clf = svm.SVC(gamma=0.001, C=100.)
+reg = linear_model.LinearRegression()
+reg = linear_model.Ridge (alpha = .5)
+
+Fit Model
+--------
+clf.fit(digits.data[:-1], digits.target[:-1])  
+
+Use model for prediction:
+--------
+clf.predict(digits.data[-1:])
+
+Example:gridCV for Ridge:
+--------
+reg = linear_model.RidgeCV(alphas=[0.1, 1.0, 10.0])
+reg.fit([[0, 0], [0, 0], [1, 1]], [0, .1, 1])       
+reg.alpha_ 
+
+Model CV:
+--------
+scores = cross_val_score(clf, iris.data, iris.target, cv=5, scoring='f1_macro')
+scores 
+
+Hyper-parameters are parameters that are not directly learnt within estimators. In scikit-learn they are passed as arguments to the constructor of the estimator classes. Typical examples include C, kernel and gamma for Support Vector Classifier, alpha for Lasso, etc.
+
+Others:
+-------
+tuned_parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],
+                     'C': [1, 10, 100, 1000]},
+                    {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
+
+clf = GridSearchCV(SVC(), tuned_parameters, cv=5,
+                       scoring='%s_macro' % score)
+clf.fit(X_train, y_train)
+
+output:
+clf.best_params_
+means = clf.cv_results_['mean_test_score']
+stds = clf.cv_results_['std_test_score']
+
+0.986 (+/-0.016) for {'C': 1, 'gamma': 0.001, 'kernel': 'rbf'}
+0.959 (+/-0.029) for {'C': 1, 'gamma': 0.0001, 'kernel': 'rbf'}
+0.988 (+/-0.017) for {'C': 10, 'gamma': 0.001, 'kernel': 'rbf'}
+
+
+Classification metrcis:
+--------
+confusion_matrix(y_true, y_pred)
+accuracy_score(y_true, y_pred)
+
+
+
+tuned_parameters = [{'C': [0.01, 0.1, 1, 10, 100], 'penalty':['l1']}]
+clf = GridSearchCV(linear_model.LogisticRegression(), tuned_parameters, cv=5)
+clf.fit(X = X_train, y = y_train)
+
+means = clf.cv_results_['mean_test_score']
+stds = clf.cv_results_['std_test_score']
+clf.best_params_
+means = clf.cv_results_['mean_test_score']
+stds = clf.cv_results_['std_test_score']
+
+print("Best parameters set found on development set:")
+print()
+print(clf.best_params_)
+print()
+print("Grid scores on development set:")
+print()
+for mean, std, params in zip(means, stds, clf.cv_results_['params']):
+    print("%0.3f (+/-%0.03f) for %r"
+        % (mean, std * 2, params))
+
+
+Ployly
+--------
+
+markers=dict(
+        size='8',
+        color = sr_1d_holidays, #set color equal to a variable
+        colorscale='RdBu',
+        showscale=False
+    )
+
+data = [go.Scatter(x=sr_1d.index, y=sr_1d.values,mode = 'lines+markers', marker = markers)]
+py.iplot(data)
